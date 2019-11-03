@@ -10,9 +10,9 @@
  In order to use it on SURFSARA, follow this instructions:
  
     - add the following lines in your ".bashrc":
-        module load Miniconda3/4.3.27
         module load 2019
         module load CUDA/10.0.130
+        module load Anaconda3/2018.12
     
     - logout and login again
     
@@ -26,7 +26,7 @@
     - add the following line at the beginning of your experiment script (.sh), before running your Python script:
         source activate dl
     
-for further information about Conda/Miniconda:
+for further information about Anaconda/Miniconda:
 
 https://docs.conda.io/projects/conda/en/latest/
 https://docs.conda.io/en/latest/miniconda.html
