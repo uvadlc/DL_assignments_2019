@@ -1,2 +1,3 @@
 # Assignments for the Deep Learning Course
-## University of Amsterdam - Fall 2019
+
+University of Amsterdam - Fall 2019
