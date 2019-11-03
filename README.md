@@ -1,1 +1,2 @@
-# Assignments for the Deep Learning Course at the UvA - Fall 2019
+# Assignments for the Deep Learning Course
+## University of Amsterdam - Fall 2019
