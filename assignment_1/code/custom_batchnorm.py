@@ -227,9 +227,6 @@ if __name__=='__main__':
     print('3.1) Test automatic differentation version')
     bn_auto = CustomBatchNormAutograd(n_neurons)
     y_auto = bn_auto(x)
-
-    assert
-
     print('\tmeans={}\n\tvars={}'.format(y_auto.mean(dim=0).data, y_auto.var(dim=0).data))
 
     # test CustomBatchNormManualFunction
