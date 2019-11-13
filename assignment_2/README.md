@@ -59,6 +59,7 @@ lastname_assignment_2.zip
 │      lstm.py
 │      train.py
 │      vanilla_rnn.py
+|      grads_over_time.py
 │   part_2/
 │      dataset.py
 │      model.py
