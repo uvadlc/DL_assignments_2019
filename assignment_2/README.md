@@ -18,7 +18,7 @@ The first task can be mostly performed on your own computer (CPU), but especiall
 
 ## Task 1. RNNs versus LSTMs
 
-For the first task, you will compare vanilla Recurrent Neural Networks (RNN) with Long-Short Term Networks (LSTM). You have to implement both network modules in the files `lstm.py` and `vanilla_rnn.py` from scratch (i.e. you are not allowed to use `nn.LSTM`, but other functionalities from PyTorch like `nn.Linear`). The palindrome dataset generation is provided in `dataset.py` and can be used without any changes. 
+For the first task, you will compare vanilla Recurrent Neural Networks (RNN) with Long-Short Term Networks (LSTM). You have to implement both network modules in the files `lstm.py` and `vanilla_rnn.py` from scratch (i.e. you are not allowed to use `nn.LSTM` or `nn.Linear`, but work with functionalities like `nn.Parameter`). The palindrome dataset generation is provided in `dataset.py` and can be used without any changes. 
 
 The file `train.py` gives a initial structure for training your models. Make sure to integrate all (hyper-)parameters that are given for the `ArgumentParser`. Feel free to add more parameters if needed.
 
