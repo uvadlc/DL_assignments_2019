@@ -64,10 +64,12 @@ lastname_assignment_2.zip
 │      dataset.py
 │      model.py
 │      train.py
+|      assets/
 ```
 
-Replace `lastname` with your last name. In case you have created any other python files to obtain results in the report, include those in the corresponding directory as well.
-Finally, please submit your file on Canvas.
+Replace `lastname` with your last name. In case you have created any other python files to obtain results in the report, include those in the corresponding directory as well. Remember to replace the data in the assets folder with the ones you have used (i.e. put the txt files of the books you used in this folder). Given example datasets which were not used do not have to be included in the submission.
+
+Finally, please submit your zip-file on Canvas.
 
 The deadline for the assignment is the **27 November, 23:59**.
 
