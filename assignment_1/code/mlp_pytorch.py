@@ -6,6 +6,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+
+import torch
+import torch.nn as nn
+
 class MLP(nn.Module):
   """
   This class implements a Multi-layer Perceptron in PyTorch.
@@ -35,7 +39,27 @@ class MLP(nn.Module):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
-    raise NotImplementedError
+    super(MLP, self).__init__()
+
+    self.layers = []
+
+    self.layers.append(nn.Linear(n_inputs,n_hidden[0]))
+    self.layers.append(nn.BatchNorm1d(num_features=n_hidden[0]))###
+    self.layers.append(nn.LeakyReLU(neg_slope))
+
+    for layer_size in range(len(n_hidden)-1):
+        self.layers.append(nn.Linear(n_hidden[layer_size],n_hidden[layer_size+1]))
+        self.layers.append(nn.BatchNorm1d(num_features=n_hidden[layer_size+1]))###
+        self.layers.append(nn.LeakyReLU(neg_slope))   #not leaky relu
+
+
+    self.layers.append(nn.Linear(n_hidden[-1],n_classes))
+
+    #self.layers.append(nn.Softmax())
+    # dont use softmax when usiung cross entropy loss
+
+    #
+    self.layers = nn.Sequential(*self.layers)
     ########################
     # END OF YOUR CODE    #
     #######################
@@ -57,7 +81,8 @@ class MLP(nn.Module):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
-    raise NotImplementedError
+    out = self.layers(x)
+
     ########################
     # END OF YOUR CODE    #
     #######################

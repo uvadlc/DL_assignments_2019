@@ -37,7 +37,21 @@ class MLP(object):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
-    raise NotImplementedError
+    # create list of layers
+    self.layers = []
+
+    # add the first layer
+    self.layers.append(LinearModule(n_inputs, n_hidden[0]))
+    self.layers.append(LeakyReLUModule(neg_slope))
+
+    # add all others except the last
+    for i in range(len(n_hidden) - 1):
+      self.layers.append(LinearModule(n_hidden[i], n_hidden[i + 1]))
+      self.layers.append(LeakyReLUModule(neg_slope))
+
+    # add last layer and soft max module
+    self.layers.append(LinearModule(n_hidden[-1], n_classes))
+    self.layers.append(SoftMaxModule())
     ########################
     # END OF YOUR CODE    #
     #######################
@@ -59,7 +73,9 @@ class MLP(object):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
-    raise NotImplementedError
+    for layer in self.layers:
+          x = layer.forward(x)
+    out = x
     ########################
     # END OF YOUR CODE    #
     #######################
@@ -80,7 +96,9 @@ class MLP(object):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
-    raise NotImplementedError
+    dx = dout
+    for layer in self.layers[::-1]:
+      dx = layer.backward(dx)
     ########################
     # END OF YOUR CODE    #
     #######################

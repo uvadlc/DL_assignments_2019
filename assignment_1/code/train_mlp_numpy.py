@@ -47,7 +47,15 @@ def accuracy(predictions, targets):
   ########################
   # PUT YOUR CODE HERE  #
   #######################
-  raise NotImplementedError
+  # get's index of greatest highest value; so the actual predicted class
+  predictions = np.argmax(predictions, axis=1)
+  targets = np.argmax(targets, axis=1)
+
+  # check if predicted and actual label are equal
+  correct_predictions = (predictions == targets)
+
+  # calculate accuracy
+  accuracy = np.mean(correct_predictions)
   ########################
   # END OF YOUR CODE    #
   #######################
@@ -80,7 +88,82 @@ def train():
   ########################
   # PUT YOUR CODE HERE  #
   #######################
-  raise NotImplementedError
+  cifar10 = cifar10_utils.get_cifar10()
+
+  ## load test data // we need it anyway for evaluation
+  x, y = cifar10['test'].images, cifar10['test'].labels
+  # reshape images to (batch_size x input_size)
+  x_test = x.reshape(x.shape[0], x.shape[1] * x.shape[2] * x.shape[3])
+  y_test = y
+
+  ## load whole train set // we need it anyway for evaluation
+  x, y = cifar10['train'].images, cifar10['train'].labels
+  # reshape images to (batch_size x input_size)
+  x_train_whole = x.reshape(x.shape[0], x.shape[1] * x.shape[2] * x.shape[3])
+  y_train_whole = y
+
+  n_classes = y_test.shape[1]
+  n_inputs = x_test.shape[1]
+
+  # initialize numpy MLP and loss
+  numpy_MLP = MLP(n_inputs=n_inputs, n_hidden=dnn_hidden_units, n_classes=n_classes, neg_slope=neg_slope)
+  cross_entropy_loss = CrossEntropyModule()
+
+  # list for evalation metrics
+  acc_train_list = []
+  acc_test_list = []
+  loss_train_list = []
+  loss_test_list = []
+
+  for step in range(MAX_STEPS_DEFAULT):
+    # load train set
+    x, y_train = cifar10['train'].next_batch(BATCH_SIZE_DEFAULT)
+    x_train = x.reshape(x.shape[0], x.shape[1] * x.shape[2] * x.shape[3])
+
+    # forward through everything except loss
+    x_N = numpy_MLP.forward(x_train)
+
+    # forward and backward through loss
+    loss_train = cross_entropy_loss.forward(x_N, y_train)
+    dL_dx = cross_entropy_loss.backward(x_N, y_train)
+
+    # backward through the rest
+    numpy_MLP.backward(dL_dx)
+
+    for layer in numpy_MLP.layers:
+
+      if hasattr(layer, 'params'):
+        # update weight matrix
+        layer.params["weight"] = layer.params["weight"] - LEARNING_RATE_DEFAULT * layer.grads["weight"]
+        layer.params["bias"] = layer.params["bias"] - LEARNING_RATE_DEFAULT * layer.grads["bias"]
+
+    if (step + 1) % EVAL_FREQ_DEFAULT == 0:
+      print("Step", step + 1)
+
+      # accuracy and loss on test set
+      x_N_test = numpy_MLP.forward(x_test)
+      acc_test = accuracy(x_N_test, y_test)
+      loss_test = cross_entropy_loss.forward(x_N_test, y_test)
+      print('Accuracy', acc_test)
+
+      # a accuracy and loss one whole train set
+      x_N_train_whole = numpy_MLP.forward(x_train_whole)
+      loss_train = cross_entropy_loss.forward(x_N_train_whole, y_train_whole)
+      acc_train = accuracy(x_N_train_whole, y_train_whole)
+
+      acc_train_list.append(acc_train)
+      acc_test_list.append(acc_test)
+      loss_train_list.append(loss_train)
+      loss_test_list.append(loss_test)
+
+
+  folder = "./np_results/"
+  print("Save results")
+  np.save(folder + "loss_train", loss_train_list)
+  np.save(folder + "acc_train", acc_train_list)
+  np.save(folder + "loss_test", loss_test_list)
+  np.save(folder + "acc_test", acc_test_list)
+
   ########################
   # END OF YOUR CODE    #
   #######################

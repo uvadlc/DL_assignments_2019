@@ -37,6 +37,11 @@ class CustomBatchNormAutograd(nn.Module):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
+    self.n_neurons = n_neurons
+
+    self.gamma = nn.Parameter(torch.ones(n_neurons))
+    self.beta = nn.Parameter(torch.zeros(n_neurons))
+    self.epsilon = eps
 
     ########################
     # END OF YOUR CODE    #
@@ -60,7 +65,19 @@ class CustomBatchNormAutograd(nn.Module):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
+    if (input.shape[1] != self.n_neurons):
+        raise ValueError(
+        'Dimensions of input',input.shape[1],'and n_neurons',self.n_neurons,'do not fit')
 
+    # get mean and variance
+    mean = input.mean(dim=0)
+    sigma_squared = input.var(dim=0,unbiased=False)
+
+    # normalize input to 0 mean and std 1
+    x_hat = (input - mean)/(sigma_squared + self.epsilon).sqrt()
+
+    # scale and shift to std dev of gamma and mean beta
+    out = self.gamma * x_hat + self.beta
     ########################
     # END OF YOUR CODE    #
     #######################
@@ -114,7 +131,20 @@ class CustomBatchNormManualFunction(torch.autograd.Function):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
+    # same as above
+    # get mean and variance
+    mean = input.mean(dim=0)
+    sigma_squared = input.var(dim=0, unbiased=False)
 
+    # normalize input to 0 mean and std 1
+    x_hat = torch.div(input - mean, torch.sqrt(sigma_squared + eps))
+
+    # scale and shift to std dev of gamma and mean beta
+    out = gamma * x_hat + beta
+
+    # save what we need for backward
+    ctx.save_for_backward(x_hat, gamma, sigma_squared)
+    ctx.constant = eps
     ########################
     # END OF YOUR CODE    #
     #######################
@@ -142,7 +172,18 @@ class CustomBatchNormManualFunction(torch.autograd.Function):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
+    # to stay in the naming convention of the report
+    dL_dy = grad_output
 
+    # access the stuff we need
+    x_hat, gamma, sigma_squared = ctx.saved_tensors
+    eps = ctx.constant
+    B = dL_dy.shape[0]
+
+    # now calculate the gradients that we need
+    grad_gamma = (dL_dy * x_hat).sum(0)
+    grad_beta = torch.sum(dL_dy, dim=0)
+    grad_input = gamma / (B * torch.sqrt(sigma_squared + eps)) * (B * dL_dy - grad_beta - grad_gamma * x_hat)
     ########################
     # END OF YOUR CODE    #
     #######################
@@ -180,6 +221,11 @@ class CustomBatchNormManualModule(nn.Module):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
+    self.n_neurons = n_neurons
+
+    self.gamma = nn.Parameter(torch.ones(n_neurons))
+    self.beta = nn.Parameter(torch.zeros(n_neurons))
+    self.epsilon = eps
 
     ########################
     # END OF YOUR CODE    #
@@ -203,6 +249,16 @@ class CustomBatchNormManualModule(nn.Module):
     ########################
     # PUT YOUR CODE HERE  #
     #######################
+    if (input.shape[1] != self.n_neurons):
+        raise ValueError(
+        'Dimensions of input',input.shape[1],'and n_neurons',self.n_neurons,'do not fit')
+
+    # create instance of custom batch function
+    custom_batch = CustomBatchNormManualFunction()
+
+    # call via apply
+    out = custom_batch.apply(input, self.gamma, self.beta, self.epsilon)
+
 
     ########################
     # END OF YOUR CODE    #
