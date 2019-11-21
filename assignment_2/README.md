@@ -71,5 +71,5 @@ Replace `lastname` with your last name. In case you have created any other pytho
 
 Finally, please submit your zip-file on Canvas.
 
-The deadline for the assignment is the **27 November, 23:59**.
+The deadline for the assignment is the **29 November, 23:59** (extended from 27 November).
 
