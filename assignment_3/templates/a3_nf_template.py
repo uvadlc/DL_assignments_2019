@@ -134,12 +134,13 @@ class Model(nn.Module):
 
         else:
             # Inverse normalize
-            logdet += torch.sum(torch.log(z) + torch.log(1-z), dim=1)
             z = torch.sigmoid(z)
+            logdet += torch.sum(torch.log(z) + torch.log(1-z), dim=1)
+            z = (z - alpha*0.5)/(1 - alpha)
 
             # Multiply by 256.
-            z = z * 256.
             logdet += np.log(256) * np.prod(z.size()[1:])
+            z = z * 256.
 
         return z, logdet
 
