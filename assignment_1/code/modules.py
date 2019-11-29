@@ -62,6 +62,7 @@ class LinearModule(object):
 
     # dimension batch_size x dim_out
     out = (W.dot(x.T) + b).T
+    #print(dim(x.T))
 
     # is of dimension batch_size x dim_in
     self.x = x

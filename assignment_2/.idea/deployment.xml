@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="lisa.surfsara.nl">
+    <serverData>
+      <paths name="lisa.surfsara.nl">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/part2" local="$PROJECT_DIR$/part2" web="/" />
+            <mapping deploy="" local="" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

@@ -19,7 +19,9 @@ from __future__ import print_function
 
 import os
 import numpy as np
+import torch
 import torch.utils.data as data
+import pickle
 
 
 class TextDataset(data.Dataset):
@@ -29,11 +31,17 @@ class TextDataset(data.Dataset):
         self._seq_length = seq_length
         self._data = open(filename, 'r').read()
         self._chars = list(set(self._data))
+        #print(self._chars)
         self._data_size, self._vocab_size = len(self._data), len(self._chars)
         print("Initialize dataset with {} characters, {} unique.".format(
             self._data_size, self._vocab_size))
         self._char_to_ix = { ch:i for i,ch in enumerate(self._chars) }
         self._ix_to_char = { i:ch for i,ch in enumerate(self._chars) }
+        np.save( 'char_to_ix.npy', self._ix_to_char,)
+        with open('char_to_ix.pkl', 'wb') as f: pickle.dump(self._ix_to_char, f)
+        np.save('_ix_to_char.npy', self._ix_to_char, )
+        with open('_ix_to_char.pkl', 'wb') as f: pickle.dump(self._ix_to_char, f)
+
         self._offset = 0
 
     def __getitem__(self, item):
@@ -51,3 +59,5 @@ class TextDataset(data.Dataset):
     @property
     def vocab_size(self):
         return self._vocab_size
+
+
